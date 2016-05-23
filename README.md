@@ -3,23 +3,33 @@
 1. config trey db:
 
  ``` bash
-vim by_db/trey_db.yml
+vim config/trey_db.yml
 ```
 
-2. calculate follower counts:
+2. dump follower counts from trey_db to 'output/db_follower_counts.yml':
 
  ```bash
-bundle install
-bundle exec ruby by_db/calculate_db.rb
+bundle exec ruby fetch_trey_follower_counts.rb
+```
+
+3. fetch srma resources to 'output/resources.yml':
+
+ ```bash
+bundle exec ruby fetch_srma_resources.rb
+```
+
+4. calculate each root_bundle_id's follower_counts:
+    
+ ```bash
+bundle exec ruby calculate_account_followers.rb
 ```
 
 
 #### references
 
-* related source files: 'by_db' dir, 'Gemfile'
 * trey_db_schema: references/trey_db_schema.sql
 
 #### todo
 
-1. need to confirm: 'page_fans'(fb), 'follower_count'(twitter, youtube) also means 'total_follower'; otherwise we need to sum all items rather than a single day's items
-2. add calculation logic of 'youtube'(youtube_channel_metrics_days): maybe sum all 'subscribers_gained'
+1. get trey data yml: run step 2 in production trey env
+2. complete 'calculate_account_followers.rb'
