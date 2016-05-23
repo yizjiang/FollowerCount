@@ -16,11 +16,11 @@ end
 
 
 FOLLOWERS_COUNT_OUTPUT = 'output/db_follower_counts.yml'
-TARGET_DATE = '2016-05-10'
+TARGET_DATE = '2016-05-20'
 TREY_FOLLOWERS_SCHEMA = load_config('config/trey_followers_count_schema.yml')
 TREY_DB_CONF = load_config('config/trey_db.yml')
 
-DB = Sequel.connect(pg_connection(TREY_DB_CONF))
+DB = Sequel.connect(pg_connection(TREY_DB_CONF['production']))
 
 
 total_counts = TREY_FOLLOWERS_SCHEMA.map do |table, table_conf|
