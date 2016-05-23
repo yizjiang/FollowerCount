@@ -15,8 +15,9 @@ end
 
 def default_headers
   {
-    :Authorization => "Bearer "+config[:token],
-    'X-Vitrue-User-Id' => config[:user_id]
+    :Authorization => "Bearer "+config[:token], #"81cc66adbb90533f84f11c265597f86ecd8179c026382746bfa3119e11db7408",#
+    'X-Vitrue-User-Id' => config[:user_id],
+    'Content-Type' => 'application/json'
   }
 end
 
@@ -24,6 +25,7 @@ end
 
 def make_request(url, options)
   p '----making request----'
+  p url
   p options
 
   resp = Typhoeus::Request.new(url,
@@ -38,6 +40,7 @@ def make_request(url, options)
   unless response.response_code == 200
     p response.response_code
     p response.response_body
+    #p response
     raise RequestError
   end
   response
