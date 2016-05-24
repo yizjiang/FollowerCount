@@ -1,25 +1,8 @@
 require 'sequel'
-require 'yaml'
 require 'erb'
+require_relative 'init'
 
-def load_config(file_path)
-  # path = File.expand_path("../#{file_name}.yml", __FILE__)
-  # puts path
-  YAML.load(ERB.new(File.read(file_path)).result)
-end
-
-def pg_connection(settings)
-  settings['port'] ||= '5432'
-
-  "#{settings['adapter']}://#{settings['username']}:#{settings['password']}@#{settings['host']}:#{settings['port']}/#{settings['database']}"
-end
-
-
-FOLLOWERS_COUNT_OUTPUT = 'output/db_follower_counts.yml'
-TARGET_DATE = '2016-05-10'
-TREY_FOLLOWERS_SCHEMA = load_config('config/trey_followers_count_schema.yml')
-TREY_DB_CONF = load_config('config/trey_db.yml')
-
+TARGET_DATE = (Time.now - 10*24*3600).to_date.to_s
 DB = Sequel.connect(pg_connection(TREY_DB_CONF))
 
 

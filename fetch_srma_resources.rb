@@ -1,13 +1,10 @@
-require 'yaml'
 require 'accountable'
 require 'accountable/batch_api'
 require 'accountable/api'
+require_relative 'init'
 
-SRMA_CONF_YML = 'config/accountable.yml'
+PER_PAGE = 20
 Accountable.load_from_yaml(SRMA_CONF_YML, 'development')
-
-SRMA_RESOURCE_OUTPUT = 'output/resources.yml'
-PER_PAGE = 250
 
 File.open(SRMA_RESOURCE_OUTPUT, 'w') do |output|
   page = 0
@@ -19,7 +16,10 @@ File.open(SRMA_RESOURCE_OUTPUT, 'w') do |output|
                                    fields: 'id,identifier,name,resource_type,stream_type,root_bundle_id'
     )
     items = results['collection']
-    output << results['collection'].to_yaml
+
+    output << results['collection'].to_yaml.tap do |yaml_str|
+      yaml_str.sub!(/^---$/, '') if page > 0 # remove heading '---' to concat
+    end
 
     page += 1
   end while results['has_more'] && items.size > 0

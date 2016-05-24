@@ -18,7 +18,13 @@ bundle exec ruby fetch_trey_follower_counts.rb
 bundle exec ruby fetch_srma_resources.rb
 ```
 
-4. calculate each root_bundle_id's follower_counts:
+4. calculate resource identifier mapping to 'output/identifier_to_account_id.yml':
+
+ ```bash
+bundle exec ruby calculate_identifier_mapping.rb
+```
+
+5. calculate each account_id's follower_counts to 'output/account_follower_count.yml':
     
  ```bash
 bundle exec ruby calculate_account_followers.rb
@@ -29,7 +35,3 @@ bundle exec ruby calculate_account_followers.rb
 
 * trey_db_schema: references/trey_db_schema.sql
 
-#### todo
-
-1. get trey data yml: run step 2 in production trey env
-2. complete 'calculate_account_followers.rb'
