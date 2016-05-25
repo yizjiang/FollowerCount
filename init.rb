@@ -18,8 +18,9 @@ TREY_FOLLOWERS_SCHEMA = load_config('config/trey_followers_count_schema.yml')
 SRMA_CONF_YML = 'config/accountable.yml'
 
 SRMA_RESOURCE_OUTPUT = 'output/resources.yml'
+SRMA_BUNDLE_OUTPUT = 'output/bundles.yml'
 FOLLOWERS_COUNT_OUTPUT = 'output/db_follower_counts.yml'
-IDENTIFIER_MAPPING_OUTPUT = 'output/identifier_to_account_id.yml'
+IDENTIFIER_MAPPING_OUTPUT = 'output/identifier_to_root_bundle_id.yml'
 ACCOUNT_FOLLOWER_COUNT_OUTPUT = 'output/account_follower_count.yml'
 
 

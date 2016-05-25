@@ -4,8 +4,12 @@ require_relative 'init'
 TABLE_TO_RESOURCE_TYPE = TREY_FOLLOWERS_SCHEMA.map do |table, table_conf|
   [table, table_conf['resource_type']]
 end.to_h
-IDENTIFIER_TO_ACCOUNT_ID = YAML.load_file(IDENTIFIER_MAPPING_OUTPUT)
+IDENTIFIER_TO_ROOT_BUNDLE_ID = YAML.load_file(IDENTIFIER_MAPPING_OUTPUT)
 FOLLOWER_COUNTS = YAML.load_file(FOLLOWERS_COUNT_OUTPUT)
+FOLLOWER_COUNT_KEY = 'follower_count'
+
+bundles = YAML.load_file(SRMA_BUNDLE_OUTPUT)
+            .map{|bundle| [bundle['id'], bundle]}.to_h
 
 srma_missing_identifiers = []
 account_counts = {}
@@ -15,12 +19,13 @@ FOLLOWER_COUNTS.each do |table, counts|
 
   counts.each do |count|
     identifier = count['identifier']
-    account_id = IDENTIFIER_TO_ACCOUNT_ID[resource_type][count['identifier']]
+    root_bundle_id = IDENTIFIER_TO_ROOT_BUNDLE_ID[resource_type][count['identifier']]
 
-    if account_id
-      account_counts[account_id] ||= {}
-      account_counts[account_id][resource_type] ||= 0
-      account_counts[account_id][resource_type] += count['followers']
+    if root_bundle_id
+      account_counts[root_bundle_id] ||= {'info' => bundles[root_bundle_id],
+                                          FOLLOWER_COUNT_KEY => {}}
+      account_counts[root_bundle_id][FOLLOWER_COUNT_KEY][resource_type] ||= 0
+      account_counts[root_bundle_id][FOLLOWER_COUNT_KEY][resource_type] += count['followers']
     else
       # puts "#{identifier} cannot be found"
       srma_missing_identifiers << identifier
@@ -29,7 +34,8 @@ FOLLOWER_COUNTS.each do |table, counts|
 end
 
 account_counts.each do |account_id, account_count|
-  account_count['total_count'] = account_count.values.reduce(0, :+)
+  cnt = account_count[FOLLOWER_COUNT_KEY]
+  cnt['total_count'] = cnt.values.reduce(0, :+)
 end
 
 File.write(ACCOUNT_FOLLOWER_COUNT_OUTPUT, account_counts.to_yaml)
